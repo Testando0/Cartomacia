@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>Luna Mística | Cartomante & Tarot</title>
+<meta name="description" content="Tarot, baralho cigano e bola de cristal. Leituras intuitivas que iluminam o seu caminho.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;500&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style>
+:root{
+  --text-color:#fff;
+  --muted-color:rgba(255,255,255,.7);
+  --glass-bg:rgba(255,255,255,.05);
+  --glass-border:rgba(255,255,255,.1);
+  --font-main:'Inter',sans-serif;
+  --font-heading:'Dancing Script',cursive;
+  --accent:#fde68a;
+  --accent-ink:#3b0764;
+  /* tema Amor (padrão) */
+  --bg-inner:#6d28d9; --bg-mid:#31064f; --bg-outer:#0b0212;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+html,body{overflow:hidden;touch-action:none;overscroll-behavior:none}
+body{
+  background:radial-gradient(circle at center,var(--bg-inner) 0%,var(--bg-mid) 50%,var(--bg-outer) 100%);
+  color:var(--text-color);font-family:var(--font-main);
+  height:100vh;height:100dvh;position:relative;
+  transition:background 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+/* partículas subindo */
+#rise-container{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.rise{position:absolute;pointer-events:none}
+.rise svg{width:100%;height:100%;display:block}
+@keyframes floatUp{
+  0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0}
+  10%{opacity:.55}90%{opacity:.55}
+  100%{transform:translateY(-110vh) translateX(30px) rotate(360deg);opacity:0}
+}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 4%;position:fixed;top:0;width:100%;z-index:100}
+.logo{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:1.7rem;font-family:var(--font-heading)}
+.logo svg{width:26px;height:26px;color:var(--accent)}
+.nav{display:flex;gap:.5rem;background:rgba(255,255,255,.08);padding:.4rem;border-radius:100px;border:1px solid rgba(255,255,255,.2);box-shadow:0 8px 32px rgba(0,0,0,.1),inset 0 0 0 1px rgba(255,255,255,.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.nav-item{font-family:'Manrope',sans-serif;color:var(--muted-color);text-decoration:none;font-size:.85rem;font-weight:500;padding:.5rem 1.2rem;border-radius:100px;transition:all .3s ease}
+.nav-item:hover,.nav-item.active{background:var(--accent);color:var(--accent-ink)}
+.header-wa{display:none;width:44px;height:44px;background:#25D366;border-radius:50%;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,.4)}
+.header-wa svg{width:22px;height:22px;fill:#fff}
+
+/* hero */
+.hero{height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;padding:0 4%;padding-top:5rem;position:relative}
+.hero-content{display:flex;justify-content:space-between;align-items:stretch;width:100%;height:100%;position:relative}
+.main-title,.side-title{font-family:var(--font-heading);font-size:clamp(4.5rem,9vw,10rem);line-height:.9;font-weight:700;white-space:nowrap;color:#fff;text-shadow:0 4px 40px rgba(168,85,247,.55)}
+.hero-left{display:flex;flex-direction:column;height:100%;padding:6rem 0;gap:2rem;z-index:100}
+.description{color:var(--muted-color);font-size:1.05rem;line-height:1.6;max-width:400px}
+.primary-btn{display:flex;align-items:center;gap:1.5rem;background:rgba(0,0,0,.45);color:#fff;border:none;padding:.4rem .4rem .4rem 1.5rem;border-radius:100px;font-weight:700;font-size:1rem;cursor:pointer;width:fit-content;transition:all .3s ease;backdrop-filter:blur(10px)}
+.primary-btn:hover{background:rgba(0,0,0,.65);transform:translateY(-3px)}
+.plus-icon{background:var(--accent);color:var(--accent-ink);width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:1.3rem;font-weight:900;line-height:1;padding-bottom:2px}
+.award-badge{display:flex;align-items:center;gap:1rem;margin-top:auto}
+.award-icon{width:48px;height:48px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.award-text{display:flex;flex-direction:column}
+.award-title{font-size:.7rem;letter-spacing:.1em;color:var(--muted-color)}
+.award-subtitle{font-size:.85rem;font-weight:600}
+
+/* palco central: rosário + carta */
+.hero-center{display:flex;justify-content:center;align-items:center;position:absolute;inset:0;z-index:1;opacity:0;animation:fadeIn 1.5s ease-out .3s forwards;pointer-events:none;perspective:1200px;background:radial-gradient(circle at center,rgba(233,213,255,.10) 0%,transparent 65%)}
+@keyframes fadeIn{to{opacity:1}}
+.bead-ring{position:absolute;width:min(94vmin,780px);height:min(94vmin,780px);opacity:.8;animation:spinSlow 90s linear infinite;pointer-events:none}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+.card-stage{animation:float 6s ease-in-out infinite;transform-style:preserve-3d;will-change:transform,filter;position:relative;z-index:1}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.card-stage svg{height:min(64vh,520px);width:auto;display:block;filter:drop-shadow(0 40px 80px rgba(0,0,0,.6))}
+
+/* cartas flutuantes */
+.fcards-container,.fcards-container-bg{position:absolute;inset:0;pointer-events:none;transition:transform .1s ease-out}
+.fcards-container{z-index:110}
+.fcards-container-bg{z-index:0}
+.fcard{position:absolute;pointer-events:none;will-change:transform}
+.fcard svg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 20px rgba(0,0,0,.45))}
+.f1{top:22%;left:26%;width:86px;height:138px}
+.f2{top:64%;left:40%;width:54px;height:86px}
+.f3{top:24%;left:63%;width:104px;height:166px}
+.f4{top:10%;left:46%;width:66px;height:106px}
+.f5{top:78%;left:16%;width:60px;height:96px}
+.f6{top:46%;left:77%;width:80px;height:128px}
+.f7{top:12%;left:34%;width:42px;height:67px;opacity:.7}
+.f8{top:54%;left:56%;width:38px;height:61px;opacity:.6}
+.f9{top:82%;left:34%;width:46px;height:74px;opacity:.7}
+
+/* coluna direita */
+.hero-right{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;text-align:right;height:100%;padding:5rem 0;z-index:100;width:470px;pointer-events:none}
+.product-carousel{display:flex;flex-direction:column;gap:1.25rem;align-items:flex-end;pointer-events:auto}
+.carousel-cards{display:grid;grid-template-columns:repeat(3,124px);gap:3.4rem .8rem;justify-content:end}
+.card{background:var(--glass-bg);border:1px solid var(--glass-border);padding:.8rem;padding-top:4.8rem;border-radius:22px;display:flex;flex-direction:column;align-items:center;gap:.6rem;cursor:pointer;transition:all .4s cubic-bezier(.175,.885,.32,1.275);backdrop-filter:blur(10px);text-align:center}
+.card:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4)}
+.card.active{border-color:var(--accent);background:rgba(253,230,138,.08)}
+.card-tarot{width:64px;margin-top:-7rem;pointer-events:none;filter:drop-shadow(0 14px 24px rgba(0,0,0,.5));transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.card-tarot svg{width:100%;height:auto;display:block}
+.card:hover .card-tarot{transform:translateY(-16px) rotate(-8deg) scale(1.1)}
+.card-info{display:flex;flex-direction:column;font-size:.7rem;width:100%;word-wrap:break-word}
+.card-info span:first-child{font-weight:600}
+.card-info span:last-child{color:var(--muted-color)}
+.side-title{align-self:flex-end;text-align:right}
+
+/* modal */
+.modal-overlay{position:fixed;inset:0;z-index:998;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:2rem;width:100%;max-width:440px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:0 25px 60px rgba(0,0,0,.4);position:relative;transform:scale(.9);opacity:0;transition:all .3s ease;max-height:92vh;overflow-y:auto}
+.modal-overlay.open .modal-box{transform:scale(1);opacity:1}
+.modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;background:rgba(255,255,255,.1);border:none;border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all .3s ease}
+.modal-close:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+.modal-title{font-family:var(--font-heading);font-size:2.5rem;margin-bottom:1.25rem}
+.cart-product-row{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,.05);padding:.9rem;border-radius:16px;margin-bottom:1.25rem}
+#cartTarot{width:52px;flex:none;filter:drop-shadow(0 8px 16px rgba(0,0,0,.4))}
+#cartTarot svg{width:100%;height:auto;display:block}
+.cart-product-info{flex:1}
+.cart-product-name{font-weight:700;font-size:1.05rem;display:block}
+.cart-product-price{color:var(--muted-color);font-size:.85rem}
+
+/* campo de descrição da consulta */
+.consult-field{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.1rem}
+.consult-label{font-size:.85rem;font-weight:600;color:var(--muted-color)}
+.consult-text{
+  width:100%;min-height:104px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.15);border-radius:14px;color:#fff;
+  font-family:var(--font-main);font-size:.92rem;line-height:1.5;
+  padding:.8rem .9rem;resize:none;outline:none;
+  transition:border-color .3s, box-shadow .3s;
+}
+.consult-text:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(253,230,138,.15)}
+.consult-text::placeholder{color:rgba(255,255,255,.35)}
+.consult-text.error{border-color:#f87171;animation:shake .35s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.consult-hint{font-size:.72rem;color:rgba(255,255,255,.45)}
+.consult-hint.error{color:#fca5a5}
+
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;border-top:1px solid rgba(255,255,255,.1);margin-bottom:1.25rem}
+.cart-total-label{color:var(--muted-color)}
+.cart-total-value{font-size:1.5rem;font-weight:900;color:var(--accent)}
+.cart-checkout-btn{width:100%;background:#25D366;color:#fff;border:none;padding:1rem;border-radius:100px;font-weight:800;font-size:1rem;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.cart-checkout-btn:hover{background:#20BA5A;transform:translateY(-2px);box-shadow:0 10px 30px rgba(37,211,102,.4)}
+.cart-checkout-btn:active{transform:scale(.98)}
+.whatsapp-icon{width:24px;height:24px}
+
+/* mobile */
+@media (max-width:768px){
+  .header{padding:.9rem 1.25rem;padding-top:calc(.9rem + env(safe-area-inset-top,0px))}
+  .logo{font-size:1.45rem}
+  .nav{display:none}
+  .header-wa{display:flex}
+  .hero{padding:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .hero-content{flex-direction:column;justify-content:space-between;align-items:center;padding:4.5rem 1.25rem 1.25rem}
+  .hero-center{order:1;position:relative;inset:auto;width:100%;height:34vh;margin:-1vh 0 -2vh;animation:fadeIn 1s ease-out .2s forwards}
+  .bead-ring{width:78vmin;height:78vmin;opacity:.45}
+  .card-stage{animation:floatM 5s ease-in-out infinite}
+  @keyframes floatM{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .card-stage svg{height:34vh}
+  .hero-left{order:2;padding:0;gap:.7rem;height:auto;width:100%;text-align:center;align-items:center}
+  .main-title{font-size:clamp(2.8rem,13vw,4.5rem);line-height:.95}
+  .description{font-size:.86rem;max-width:88%;line-height:1.45}
+  .description br{display:none}
+  .primary-btn{padding:.35rem .35rem .35rem 1.25rem;gap:1rem;font-size:.9rem}
+  .plus-icon{width:34px;height:34px;font-size:1.15rem}
+  .award-badge{margin-top:.25rem;gap:.6rem;justify-content:center}
+  .award-icon{width:36px;height:36px;border-radius:10px}
+  .award-icon svg{width:18px;height:18px}
+  .award-title{font-size:.6rem}.award-subtitle{font-size:.7rem}
+  .hero-right{order:3;width:100%;height:auto;padding:0;align-items:center;text-align:center}
+  .side-title{display:none}
+  .product-carousel{width:100%;align-items:center;gap:.6rem}
+  .carousel-cards{grid-template-columns:repeat(3,1fr);gap:2.8rem .6rem;width:100%;max-width:420px;justify-content:center}
+  .card{padding:2.9rem .4rem .6rem;border-radius:16px;gap:.4rem}
+  .card-tarot{width:44px;margin-top:-5.2rem}
+  .card-info span:first-child{font-size:.66rem}
+  .card-info span:last-child{font-size:.62rem}
+  .fcards-container,.fcards-container-bg{transform:none!important}
+  .f1{width:56px;height:90px;top:66%;left:-5%}
+  .f2{width:34px;height:54px;top:30%;left:87%}
+  .f3{width:66px;height:106px;top:5%;left:62%}
+  .f4{width:40px;height:64px;top:56%;left:85%}
+  .f5{width:36px;height:58px;top:18%;left:-4%}
+  .f6{width:50px;height:80px;top:86%;left:44%}
+  .f7{width:26px;height:42px;top:40%;left:-7%}
+  .f8{width:28px;height:45px;top:78%;left:82%}
+  .f9{width:30px;height:48px;top:3%;left:26%}
+  .modal-box{padding:1.5rem}
+  .modal-title{font-size:2.1rem}
+}
+@media (max-width:768px) and (max-height:680px){
+  .award-badge{display:none}
+  .main-title{font-size:clamp(2.4rem,11vw,3.6rem)}
+  .description{font-size:.8rem}
+  .hero-center{height:30vh}
+  .card-stage svg{height:30vh}
+  .card{padding:2.5rem .3rem .5rem}
+  .card-tarot{width:38px;margin-top:-4.6rem}
+  .consult-text{min-height:84px}
+}
+@media (max-width:360px){
+  .hero-content{padding:4.2rem .9rem .9rem}
+  .main-title{font-size:2.5rem}
+  .description{display:none}
+  .hero-center{height:28vh}
+  .card-stage svg{height:28vh}
+}
+@media (max-width:1024px) and (orientation:landscape) and (max-height:500px){
+  .hero-content{flex-direction:row;padding:3.5rem 1.5rem 1rem}
+  .hero-left{order:1;width:42%;text-align:left;align-items:flex-start;gap:.5rem}
+  .main-title{font-size:2.8rem}
+  .description,.award-badge,.side-title{display:none}
+  .hero-center{order:2;width:34%;height:auto;margin:0}
+  .bead-ring{display:none}
+  .card-stage svg{height:76vh}
+  .hero-right{order:3;width:24%;padding:0;align-items:flex-end}
+  .carousel-cards{grid-template-columns:1fr;gap:1.9rem}
+  .card{padding:2.3rem .4rem .5rem}
+  .card-tarot{width:36px;margin-top:-3.8rem}
+  .fcard{display:none}
+}
+@media (hover:none){
+  .card:hover{background:var(--glass-bg);border-color:var(--glass-border)}
+  .card:hover .card-tarot{transform:none}
+  .card.active{background:rgba(253,230,138,.08);border-color:var(--accent)}
+  .primary-btn:hover{transform:none;background:rgba(0,0,0,.45)}
+  .nav-item:hover{background:transparent;color:var(--muted-color)}
+  .nav-item.active{background:var(--accent);color:var(--accent-ink)}
+}
+</style>
+</head>
+<body>
+<div id="rise-container"></div>
+
+<header class="header">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M17 3.5l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6.6-1.6z" fill="currentColor"/>
+    </svg>
+    <span>Luna Mística</span>
+  </div>
+  <nav class="nav">
+    <a href="#" class="nav-item active">Início</a>
+    <a href="#" class="nav-item">Tiragens</a>
+    <a href="#" class="nav-item">Oráculos</a>
+    <a href="#" class="nav-item">Sobre</a>
+    <a href="#" class="nav-item">Contato</a>
+  </nav>
+  <a class="header-wa" href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Gostaria%20de%20uma%20leitura." target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+  </a>
+</header>
+
+<main class="hero">
+  <div class="hero-content">
+    <div class="hero-left">
+      <h1 class="main-title">
+        <span>Destino</span><br>
+        Revelado
+      </h1>
+      <p class="description">
+        Tarot, baralho cigano e bola de cristal: leituras intuitivas que iluminam amor, trabalho e caminhos. Mais de 20 anos revelando o que as cartas guardam para você.
+      </p>
+      <div class="cta-group">
+        <button class="primary-btn" id="buyBtn">
+          Agendar Consulta
+          <span class="plus-icon">☾</span>
+        </button>
+      </div>
+      <div class="award-badge">
+        <div class="award-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3l2.1 5.4L20 10l-5.9 1.6L12 17l-2.1-5.4L4 10l5.9-1.6L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M19 17l.9 2.1L22 20l-2.1.9L19 23l-.9-2.1L16 20l2.1-.9L19 17z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="award-text">
+          <span class="award-title">+20 ANOS DE EXPERIÊNCIA</span>
+          <span class="award-subtitle">Mais de 5 mil leituras</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fcards-container-bg">
+      <div class="fcard f7"></div>
+      <div class="fcard f8"></div>
+      <div class="fcard f9"></div>
+    </div>
+
+    <div class="hero-center">
+      <svg class="bead-ring" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="300" cy="300" rx="272" ry="212" fill="none" stroke="#0a0a0a" stroke-width="16" stroke-dasharray="0.1 27" stroke-linecap="round"/>
+        <ellipse cx="300" cy="300" rx="272" ry="212" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="5" stroke-dasharray="0.1 27" stroke-linecap="round"/>
+        <ellipse cx="300" cy="300" rx="238" ry="182" fill="none" stroke="#6b21a8" stroke-width="13" stroke-dasharray="0.1 30" stroke-linecap="round"/>
+        <ellipse cx="300" cy="300" rx="238" ry="182" fill="none" stroke="#c084fc" stroke-width="5" stroke-dasharray="0.1 30" stroke-linecap="round" opacity=".7"/>
+        <g transform="translate(300 552)">
+          <path d="M0 -22 V26 M-15 -14 V0 C-15 12 -7 17 0 17 M15 -14 V0 C15 12 7 17 0 17" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle cx="0" cy="36" r="8" fill="#a855f7"/>
+          <circle cx="0" cy="36" r="3" fill="#e9d5ff"/>
+        </g>
+      </svg>
+      <div class="card-stage" id="card-stage"></div>
+    </div>
+
+    <div class="fcards-container">
+      <div class="fcard f1"></div>
+      <div class="fcard f2"></div>
+      <div class="fcard f3"></div>
+      <div class="fcard f4"></div>
+      <div class="fcard f5"></div>
+      <div class="fcard f6"></div>
+    </div>
+
+    <div class="hero-right">
+      <div class="product-carousel">
+        <div class="carousel-cards">
+          <div class="card active" data-theme="amor" data-price="59.90">
+            <div class="card-tarot"></div>
+            <div class="card-info"><span>Tiragem do Amor</span><span>R$ 59,90</span></div>
+          </div>
+          <div class="card" data-theme="cristal" data-price="89.90">
+            <div class="card-tarot"></div>
+            <div class="card-info"><span>Bola de Cristal</span><span>R$ 89,90</span></div>
+          </div>
+          <div class="card" data-theme="cigano" data-price="69.90">
+            <div class="card-tarot"></div>
+            <div class="card-info"><span>Baralho Cigano</span><span>R$ 69,90</span></div>
+          </div>
+        </div>
+      </div>
+      <h2 class="side-title">
+        <span>O Oculto</span><br>
+        te Aguarda
+      </h2>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="cartModal">
+  <div class="modal-box">
+    <button class="modal-close" id="cartCloseBtn">×</button>
+    <h3 class="modal-title">Sua Consulta</h3>
+    <div class="cart-product-row">
+      <div id="cartTarot"></div>
+      <div class="cart-product-info">
+        <span class="cart-product-name" id="cartName">Tiragem do Amor</span>
+        <span class="cart-product-price" id="cartUnitPrice">R$ 59,90 / consulta</span>
+      </div>
+    </div>
+    <div class="consult-field">
+      <label class="consult-label" for="consultText">Sua mensagem para a cartomante</label>
+      <textarea id="consultText" class="consult-text" rows="4" maxlength="600"
+        placeholder="Descreva sobre o que deseja consultar... (amor, trabalho, saúde, caminhos...)"></textarea>
+      <span class="consult-hint" id="consultHint">Escreva algumas palavras para a cartomante se preparar. ✨</span>
+    </div>
+    <div class="cart-total-row">
+      <span class="cart-total-label">Valor da consulta</span>
+      <span class="cart-total-value" id="cartTotal">R$ 59,90</span>
+    </div>
+    <button class="cart-checkout-btn" id="checkoutBtn">
+      <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+      Prosseguir no WhatsApp
+    </button>
+  </div>
+</div>
+
+<script>
+/* ===== CONFIG ===== */
+const WHATSAPP_NUMBER = '5511999999999'; // troque pelo seu número
+
+const THEMES = {
+  amor:    { num:6,  title:'AMOR',    motif:'heart',   light:'#f0abfc', mid:'#a855f7', dark:'#581c87', glow:'rgba(240,171,252,.55)', bg:{ inner:'#6d28d9', mid:'#31064f', outer:'#0b0212' } },
+  cristal: { num:30, title:'DESTINO', motif:'crystal', light:'#6ee7b7', mid:'#10b981', dark:'#065f46', glow:'rgba(110,231,183,.55)', bg:{ inner:'#047857', mid:'#022c22', outer:'#010f0b' } },
+  cigano:  { num:29, title:'CIGANO',  motif:'mandala', light:'#fda4af', mid:'#e11d48', dark:'#881337', glow:'rgba(253,164,175,.55)', bg:{ inner:'#9f1239', mid:'#4c0519', outer:'#120208' } }
+};
+
+/* ===== SVGs 100% por código ===== */
+function star4(cx, cy, s, fill, op){
+  return `<path d="M${cx} ${cy-s} L${cx+s*.25} ${cy-s*.25} L${cx+s} ${cy} L${cx+s*.25} ${cy+s*.25} L${cx} ${cy+s} L${cx-s*.25} ${cy+s*.25} L${cx-s} ${cy} L${cx-s*.25} ${cy-s*.25} Z" fill="${fill}" opacity="${op}"/>`;
+}
+
+function motifSVG(t, uid){
+  if (t.motif === 'heart'){
+    return `
+      <circle cx="150" cy="238" r="96" fill="url(#glow${uid})"/>
+      <path d="M150 332 C 95 287 76 235 108 204 C 131 182 150 202 150 221 C 150 202 169 182 192 204 C 224 235 205 287 150 332 Z"
+            fill="url(#mot${uid})" stroke="rgba(255,255,255,.55)" stroke-width="2.5"/>
+      ${star4(80,150,10,'#fff',.8)}${star4(222,168,8,'#fff',.6)}${star4(205,320,7,'#fff',.5)}`;
+  }
+  if (t.motif === 'crystal'){
+    return `
+      <circle cx="150" cy="222" r="92" fill="url(#glow${uid})"/>
+      <circle cx="150" cy="222" r="66" fill="url(#mot${uid})" stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+      <ellipse cx="127" cy="197" rx="20" ry="11" fill="rgba(255,255,255,.55)" transform="rotate(-25 127 197)"/>
+      <path d="M112 236 q20 14 42 4 q20 -9 34 2" stroke="rgba(255,255,255,.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M116 290 L184 290 L198 322 L102 322 Z" fill="#2b1a06" stroke="rgba(253,230,138,.5)" stroke-width="2"/>
+      <ellipse cx="150" cy="290" rx="34" ry="8" fill="rgba(253,230,138,.25)"/>
+      ${star4(70,140,9,'#fff',.7)}${star4(232,150,7,'#fff',.6)}`;
+  }
+  let petals = '';
+  for (let i = 0; i < 8; i++){
+    petals += `<ellipse cx="150" cy="196" rx="17" ry="44" fill="url(#mot${uid})" opacity=".92" transform="rotate(${i*45} 150 240)"/>`;
+  }
+  return `
+    <circle cx="150" cy="240" r="96" fill="url(#glow${uid})"/>
+    ${petals}
+    <circle cx="150" cy="240" r="18" fill="${t.light}"/>
+    <circle cx="150" cy="240" r="62" fill="none" stroke="${t.light}" stroke-width="2" stroke-dasharray="0.1 12" stroke-linecap="round" opacity=".8"/>
+    ${star4(72,150,8,'#fff',.7)}${star4(228,330,7,'#fff',.6)}`;
+}
+
+function tarotSVG(uid, t){
+  return `
+  <svg viewBox="0 0 300 520" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cb${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" style="stop-color:#22093f"/><stop offset="1" style="stop-color:#0a0210"/>
+      </linearGradient>
+      <linearGradient id="mot${uid}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" style="stop-color:${t.light}"/><stop offset=".55" style="stop-color:${t.mid}"/><stop offset="1" style="stop-color:${t.dark}"/>
+      </linearGradient>
+      <radialGradient id="glow${uid}">
+        <stop offset="0" style="stop-color:${t.glow}"/><stop offset="1" style="stop-color:rgba(0,0,0,0)"/>
+      </radialGradient>
+    </defs>
+    <rect x="8" y="8" width="284" height="504" rx="26" fill="url(#cb${uid})" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+    <rect x="22" y="22" width="256" height="476" rx="18" fill="none" stroke="rgba(253,230,138,.45)" stroke-width="1.5"/>
+    <rect x="30" y="30" width="240" height="460" rx="14" fill="none" stroke="rgba(253,230,138,.18)" stroke-width="1"/>
+    ${star4(44,44,9,'#fde68a',.9)}${star4(256,44,9,'#fde68a',.9)}${star4(44,476,9,'#fde68a',.9)}${star4(256,476,9,'#fde68a',.9)}
+    <text x="150" y="76" text-anchor="middle" font-family="Manrope, sans-serif" font-size="15" letter-spacing="6" fill="rgba(253,230,138,.85)">${t.title}</text>
+    ${motifSVG(t, uid)}
+    <circle cx="150" cy="462" r="15" fill="rgba(255,255,255,.92)"/>
+    <text x="150" y="467" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="14" fill="#2b0716">${t.num}</text>
+  </svg>`;
+}
+
+function miniCardSVG(){
+  let petals = '';
+  for (let i = 0; i < 6; i++){
+    petals += `<ellipse cx="50" cy="62" rx="7" ry="18" fill="none" stroke="#f0abfc" stroke-width="1.2" opacity=".85" transform="rotate(${i*60} 50 80)"/>`;
+  }
+  return `
+  <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="4" width="92" height="152" rx="12" fill="#2a0a4a" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+    <rect x="10" y="10" width="80" height="140" rx="9" fill="none" stroke="rgba(240,171,252,.35)"/>
+    <circle cx="50" cy="80" r="26" fill="none" stroke="#f0abfc" stroke-width="1.5" opacity=".8"/>
+    ${petals}
+    <circle cx="50" cy="80" r="6" fill="#fde68a"/>
+    ${star4(20,24,5,'#fde68a',.8)}${star4(80,136,5,'#fde68a',.8)}
+  </svg>`;
+}
+
+const SPARK_SVG = `
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M50 2 L60 40 L98 50 L60 60 L50 98 L40 60 L2 50 L40 40 Z" fill="#f5d08c"/>
+  <path d="M50 22 L56 44 L78 50 L56 56 L50 78 L44 56 L22 50 L44 44 Z" fill="#fff" opacity=".85"/>
+</svg>`;
+
+/* injeções iniciais */
+const stage = document.getElementById('card-stage');
+stage.innerHTML = tarotSVG('main', THEMES.amor);
+document.querySelectorAll('.card').forEach(c => {
+  c.querySelector('.card-tarot').innerHTML = tarotSVG(c.dataset.theme, THEMES[c.dataset.theme]);
+});
+document.querySelectorAll('.fcard').forEach(f => { f.innerHTML = miniCardSVG(); });
+
+/* ===== ELEMENTOS ===== */
+const root = document.documentElement;
+const fcardsFG = document.querySelector('.fcards-container');
+const fcardsBG = document.querySelector('.fcards-container-bg');
+const allFcards = document.querySelectorAll('.fcard');
+const cards = document.querySelectorAll('.card');
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+let isSwitching = false, switchSpin = 0;
+
+const cartModal = document.getElementById('cartModal');
+const cartCloseBtn = document.getElementById('cartCloseBtn');
+const cartTarot = document.getElementById('cartTarot');
+const cartName = document.getElementById('cartName');
+const cartUnitPrice = document.getElementById('cartUnitPrice');
+const cartTotal = document.getElementById('cartTotal');
+const consultText = document.getElementById('consultText');
+const consultHint = document.getElementById('consultHint');
+const checkoutBtn = document.getElementById('checkoutBtn');
+const buyBtn = document.getElementById('buyBtn');
+let cartPrice = 59.90;
+
+const HINT_DEFAULT = 'Escreva algumas palavras para a cartomante se preparar. ✨';
+const fmt = v => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+
+function openCart(){
+  const active = document.querySelector('.card.active');
+  if (active){
+    cartName.textContent = active.querySelector('.card-info span:first-child').textContent;
+    cartPrice = parseFloat(active.dataset.price);
+    cartTarot.innerHTML = tarotSVG('cart', THEMES[active.dataset.theme]);
+  }
+  cartUnitPrice.textContent = fmt(cartPrice) + ' / consulta';
+  cartTotal.textContent = fmt(cartPrice);
+  /* limpa o campo a cada abertura */
+  consultText.value = '';
+  consultText.classList.remove('error');
+  consultHint.classList.remove('error');
+  consultHint.textContent = HINT_DEFAULT;
+  cartModal.classList.add('open');
+  setTimeout(() => consultText.focus({ preventScroll: true }), 350);
+}
+const closeCart = () => cartModal.classList.remove('open');
+
+cartCloseBtn.addEventListener('click', closeCart);
+cartModal.addEventListener('click', e => { if (e.target === cartModal) closeCart(); });
+buyBtn.addEventListener('click', openCart);
+
+/* ao digitar, remove o estado de erro */
+consultText.addEventListener('input', () => {
+  consultText.classList.remove('error');
+  consultHint.classList.remove('error');
+  consultHint.textContent = HINT_DEFAULT;
+});
+
+checkoutBtn.addEventListener('click', () => {
+  const text = consultText.value.trim();
+  if (!text){
+    consultText.classList.add('error');
+    consultHint.classList.add('error');
+    consultHint.textContent = 'Por favor, descreva sobre o que deseja consultar para prosseguir.';
+    consultText.focus({ preventScroll: true });
+    return;
+  }
+  const msg = encodeURIComponent(
+    `Olá! Gostaria de agendar uma consulta de ${cartName.textContent} (${fmt(cartPrice)}).\n\n` +
+    `✍️ Sobre o que desejo consultar:\n"${text}"`
+  );
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+  closeCart();
+});
+
+/* ===== TROCA DE TIRAGEM ===== */
+cards.forEach(card => card.addEventListener('click', () => {
+  if (isSwitching) return;
+  cards.forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  switchTheme(card.dataset.theme);
+}));
+
+function switchTheme(theme){
+  if (isSwitching) return;
+  isSwitching = true;
+  const t = THEMES[theme];
+
+  /* 1. fundo morfe */
+  gsap.to(root, {
+    '--bg-inner': t.bg.inner, '--bg-mid': t.bg.mid, '--bg-outer': t.bg.outer,
+    duration: 1.5, ease: 'power2.inOut'
+  });
+
+  /* 2. giro 720° com blur, troca da carta no pico */
+  const spinObj = { val: 0, blur: 0 };
+  gsap.to(spinObj, {
+    val: 360, blur: 15, duration: .6, ease: 'power2.in',
+    onUpdate: () => { switchSpin = spinObj.val; stage.style.filter = `blur(${spinObj.blur}px)`; },
+    onComplete: () => {
+      stage.innerHTML = tarotSVG('main', t); /* troca no pico */
+      gsap.to(spinObj, {
+        val: 720, blur: 0, duration: 1.5, ease: 'back.out(0.7)',
+        onUpdate: () => { switchSpin = spinObj.val; stage.style.filter = `blur(${spinObj.blur}px)`; },
+        onComplete: () => { switchSpin = 0; stage.style.filter = 'none'; }
+      });
+    }
+  });
+
+  /* 3. cartas flutuantes: recolhem e explodem */
+  let done = 0;
+  const fc = document.querySelectorAll('.fcard');
+  const heroCenter = document.querySelector('.hero-center');
+  fc.forEach(f => {
+    const bW = f.offsetWidth / 2, bH = f.offsetHeight / 2;
+    const centerX = window.innerWidth / 2 - f.offsetLeft - bW;
+    const centerY = window.innerHeight / 2 - f.offsetTop - bH;
+    const startAngle = parseFloat(f.dataset.angle) || 0;
+    const curX = parseFloat(f.dataset.baseX) || 0;
+    const curY = parseFloat(f.dataset.baseY) || 0;
+    const nextX = (Math.random() - .5) * 200;
+    const nextY = (Math.random() - .5) * 200;
+
+    gsap.set(f, { rotation: startAngle, x: curX, y: curY });
+    gsap.timeline()
+      .to(f, { x: centerX, y: centerY, rotation: startAngle + 45, scale: .1, opacity: 0, duration: .5, ease: 'power2.in',
+        onComplete: () => { heroCenter.style.zIndex = 50; } })
+      .to(f, { duration: .3 })
+      .to(f, { onStart: () => { heroCenter.style.zIndex = 1; },
+        x: nextX, y: nextY, rotation: startAngle + 90, scale: 1, opacity: 1, duration: .9, ease: 'back.out(1.5)',
+        onComplete: () => {
+          f.dataset.angle = startAngle + 90;
+          f.dataset.baseX = nextX; f.dataset.baseY = nextY;
+          f.dataset.rx = 0; f.dataset.ry = 0;
+          if (++done === fc.length) isSwitching = false;
+        } });
+  });
+}
+
+allFcards.forEach(f => {
+  f.dataset.rx = 0; f.dataset.ry = 0; f.dataset.angle = Math.random() * 360;
+  f.dataset.baseX = 0; f.dataset.baseY = 0;
+});
+
+/* ===== MOUSE / LOOP ===== */
+let mouse = { x: 0, y: 0, px: 0, py: 0 };
+let currentMouse = { x: 0, y: 0 };
+
+if (!isMobile){
+  window.addEventListener('mousemove', e => {
+    mouse.x = e.clientX / window.innerWidth - .5;
+    mouse.y = e.clientY / window.innerHeight - .5;
+    mouse.px = e.clientX; mouse.py = e.clientY;
+  });
+}
+
+function animate(){
+  const time = Date.now() * .001;
+
+  if (!isMobile){
+    currentMouse.x += (mouse.x - currentMouse.x) * .05;
+    currentMouse.y += (mouse.y - currentMouse.y) * .05;
+    stage.style.transform = `rotateY(${currentMouse.x * 18 + switchSpin}deg) rotateX(${-currentMouse.y * 10}deg)`;
+    fcardsFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`;
+    fcardsBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`;
+  } else if (switchSpin !== 0){
+    stage.style.transform = `rotateY(${switchSpin}deg)`;
+  }
+
+  if (!isSwitching){
+    allFcards.forEach((f, i) => {
+      const baseX = parseFloat(f.dataset.baseX) || 0;
+      const baseY = parseFloat(f.dataset.baseY) || 0;
+      let angle = parseFloat(f.dataset.angle) || 0;
+
+      if (isMobile){
+        const dur = [5,7,6,8,5.5,6.5,9,11,10][i % 9];
+        const phase = (time + i * .7) * (Math.PI * 2 / dur);
+        const floatY = Math.sin(phase) * 10;
+        const floatX = Math.cos(phase * .7) * 6;
+        f.style.transform = `translate(${baseX + floatX}px, ${baseY + floatY}px) rotate(${angle}deg)`;
+        return;
+      }
+
+      const rect = f.getBoundingClientRect();
+      const sx = rect.left + rect.width / 2, sy = rect.top + rect.height / 2;
+      const diffX = mouse.px - sx, diffY = mouse.py - sy;
+      const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+      let targetRx = 0, targetRy = 0, speedMult = 1;
+      if (distance < 400){
+        const force = (400 - distance) / 400;
+        targetRx = diffX / distance * force * -80;
+        targetRy = diffY / distance * force * -80;
+        speedMult = 1 + force * 5;
+      }
+      let rx = parseFloat(f.dataset.rx) || 0;
+      let ry = parseFloat(f.dataset.ry) || 0;
+      rx += (targetRx - rx) * .1;
+      ry += (targetRy - ry) * .1;
+      angle += .2 * speedMult;
+      f.dataset.rx = rx; f.dataset.ry = ry; f.dataset.angle = angle;
+
+      const dur = [5,7,6,8,5.5,6.5,9,11,10][i % 9];
+      const phase = (time + i * .7) * (Math.PI * 2 / dur);
+      const floatY = Math.sin(phase) * 15;
+      const floatAngle = Math.cos(phase) * 6;
+      f.style.transform = `translate(${rx + baseX}px, ${ry + baseY + floatY}px) rotate(${angle + floatAngle}deg)`;
+    });
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ===== ESTRELAS SUBINDO ===== */
+const riseContainer = document.getElementById('rise-container');
+function createRise(){
+  if (!riseContainer) return;
+  const el = document.createElement('div');
+  el.className = 'rise';
+  el.innerHTML = SPARK_SVG;
+  if (Math.random() < .45) el.firstChild.style.filter = 'hue-rotate(250deg) saturate(1.4)';
+  const size = (isMobile ? Math.random() * 12 + 8 : Math.random() * 18 + 10) + 'px';
+  el.style.width = size; el.style.height = size;
+  el.style.left = Math.random() * 100 + '%';
+  el.style.bottom = '-40px';
+  el.style.opacity = Math.random() * .35 + .2;
+  const duration = Math.random() * 6 + 4;
+  el.style.animation = `floatUp ${duration}s linear forwards`;
+  riseContainer.appendChild(el);
+  setTimeout(() => el.remove(), duration * 1000);
+}
+setInterval(createRise, isMobile ? 900 : 450);
+</script>
+</body>
+</html>
